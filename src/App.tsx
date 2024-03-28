@@ -14,6 +14,7 @@ import Pamphlets from './screens/pamphlet/Pamphlets';
 import Detail from './screens/pamphlet/Detail';
 import RegisterResult from './screens/apply/RegisterResult';
 import RegisterProgram from './screens/apply/RegisterProgram';
+import RegisterTypeSelect from './screens/apply/RegisterTypeSelect';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/company" element={<Company/>}/>
         <Route path="/usenotice" element={<UseNotice/>}/>
         <Route path="/apply" element={<Apply/>}/>
+        <Route path="/registertypeselect" element={<RegisterTypeSelect/>}/>
         <Route path="/registerdefault" element={<RegisterDefault/>}/>
         <Route path="/registerprogram" element={<RegisterProgram/>}/>
         <Route path="/registerplayer" element={<RegisterPlayer/>}/>

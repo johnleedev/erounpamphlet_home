@@ -8,7 +8,7 @@ import { useDropzone } from 'react-dropzone'
 import imageCompression from "browser-image-compression";
 import axios from 'axios'
 import MainURL from "../../MainURL";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import SubTitle from '../../components/SubTitle';
 import Select from 'react-select';
 import DatePicker from "react-datepicker";
@@ -27,6 +27,8 @@ import Loading from '../../components/Loading';
 export default function RegisterDefault(props:any) {
 
   let navigate = useNavigate();
+  const useLocationCopy = useLocation();
+  
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const dateCopy = new Date();
@@ -46,6 +48,7 @@ export default function RegisterDefault(props:any) {
   const [nameEn, setNameEn] = useState('');
   const [location, setLocation] = useState('');
   const [date, setDate] = useState('');
+  const [dateOrigin, setDateOrigin] = useState('');
   const [time, setTime] = useState('PM 7:30');
   const [place, setPlace] = useState('');
   const [address, setAddress] = useState('');
@@ -77,7 +80,7 @@ export default function RegisterDefault(props:any) {
     { value: 'TROMBONE', label: 'Trombone'}, 
     { value: 'TUBA', label: 'Tuba'}, 
     { value: 'HARP', label: 'Harp'}, 
-    { value: 'MARIMBA', label: 'Marimba'}
+    { value: 'PERCUSSION', label: 'Percussion'}
   ];
 
   const partOptionsVocal = [
@@ -139,8 +142,12 @@ export default function RegisterDefault(props:any) {
     const copy = event.toLocaleDateString('ko-KR');
     const splitCopy = copy.split('. ');
     const thirdText = splitCopy[2].slice(0, -1);
-    const reformmedText = `${splitCopy[0]}년 ${splitCopy[1]}월 ${thirdText}일 (${day})`
-    setDate(reformmedText);
+    const reformmedTextko = `${splitCopy[0]}년 ${splitCopy[1]}월 ${thirdText}일 (${day})`
+    const splitCopy2Copy = splitCopy[1] < 10 ? `0${splitCopy[1]}` : splitCopy[1];
+    const splitCopy3Copy = splitCopy[2] < 10 ? `0${splitCopy[2]}` : splitCopy[2];
+    const reformmedText = `${splitCopy[0]}.${splitCopy2Copy}.${splitCopy3Copy}`;
+    setDate(reformmedTextko);
+    setDateOrigin(reformmedText);
   }
 
   // 시간 선택 ----------------------------------------------
@@ -337,19 +344,21 @@ export default function RegisterDefault(props:any) {
 
   // 프로그램 팜플렛 정보 등록 함수 ----------------------------------------------
   const registerPost = async () => {
+    // navigate('/registerprogram', {state : { 
+    //           pamphletID : 100, type: 'small', part : 'Tenor', sort: 'Vocal'
+    //         }});
     setIsLoading(true);
     const formData = new FormData();
     formData.append("img", imageFiles[0]);
     const getParams = {
       userAccount : 'johnleedev@naver.com', userName: '이요한',
-      registerDate : formatToday,
-      sort: sort, title: title, location: location, date: date, time : time, 
-      place : place, address : address, 
+      registerDate : formatToday, type: useLocationCopy.state.type, playerNum : useLocationCopy.state.playerNum,
+      sort: sort, title: title, location: location, date: date, dateOrigin: dateOrigin,
+      time : time, place : place, address : address, 
       superViser :superViser, supporter : supporter,
       ticket :ticket, ticketReserve: ticketReserve, quiry :quiry,
       imageName : imageFiles[0].name,
     }
-
     axios 
       .post(`${MainURL}/pamphlets/postdefault`, formData, {
         headers: {
@@ -360,7 +369,9 @@ export default function RegisterDefault(props:any) {
       .then((res) => {
         if (res.data.success === true) {
           alert('입력되었습니다.');
-          navigate('/registerprogram', {state : { pamphletID : res.data.pamphletID, part : part, sort: sort } }); 
+          navigate('/registerprogram', {state : { 
+            pamphletID : res.data.pamphletID, type: useLocationCopy.state.type, part : part, sort: sort 
+          }}); 
         } else {
           alert(res.data);
         }
@@ -418,30 +429,34 @@ export default function RegisterDefault(props:any) {
                 </div>
               </div>
             </div>
-            <div className="inputbox">
-              <div className='name'>
-                <p>파트</p>
-              </div>
-              { selectSort === 1 && 
+            {
+              useLocationCopy.state.type === 'solo' &&
+              <div className="inputbox">
+                <div className='name'>
+                  <p>파트</p>
+                </div>
+                { selectSort === 1 && 
+                  <Select className='input' value={selectedPartOption}
+                  onChange={handleSelectPartChange}
+                  options={partOptionsOrchestral} /> 
+                }
+                { selectSort === 2 && 
                 <Select className='input' value={selectedPartOption}
                 onChange={handleSelectPartChange}
-                options={partOptionsOrchestral} /> 
-              }
-              { selectSort === 2 && 
-              <Select className='input' value={selectedPartOption}
-              onChange={handleSelectPartChange}
-              options={partOptionsVocal} /> 
-              }
-              { selectSort === 3 && 
-              <input type="text" onChange={(e)=>{setPart(e.target.value)}} value={part}/>
-              }
-            </div>
+                options={partOptionsVocal} /> 
+                }
+                { selectSort === 3 && 
+                <input type="text" onChange={(e)=>{setPart(e.target.value)}} value={part}/>
+                }
+              </div>
+            }
             <div className="inputbox">
               <div className='name'>
                 <p>영문 이름</p>
                 <p style={{fontSize:12}}>(선택/포스터용)</p>
               </div>
-              <input type="text" onChange={(e)=>{setNameEn(e.target.value)}} value={nameEn} placeholder='ex) Hong Gildong'/>
+              <input type="text" onChange={(e)=>{setNameEn(e.target.value)}} value={nameEn} 
+                placeholder={ useLocationCopy.state.playerNum > 1 ? 'ex) Hong Gildong, Kim cheolsu' : 'ex) Hong Gildong'}/>
             </div>
             <div className="inputbox">
               <div className='name'>
@@ -828,6 +843,11 @@ export default function RegisterDefault(props:any) {
 
 
         <div className="buttonbox">
+          <div className="button" onClick={()=>{
+            navigate('/registertypeselect'); 
+          }}>
+            <p>이전</p>
+          </div>
           <div className="button" onClick={registerPost}>
             <p>다음</p>
           </div>
@@ -839,3 +859,4 @@ export default function RegisterDefault(props:any) {
     </div>
   );
 }
+

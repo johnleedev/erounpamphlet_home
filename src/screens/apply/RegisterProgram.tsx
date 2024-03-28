@@ -260,66 +260,135 @@ export default function RegisterProgram (props:any) {
       setSubProgramInputs(inputs);
     }
   };
+
   // -----------------------------------------------------------------
   // 곡설명 입력 박스 
   interface NoticeProps {
-    programNumber: number | null;
-    notice : string;
-    view : boolean;
+    programNumber: number;
+    notice : [{songNum : number, content: string, view: boolean}]
   }
 
   // 곡설명 입력 데이터
   const [noticeInputs, setNoticeInputs] = useState<NoticeProps[]>([])
 
-  // 곡설명 입력창 생성
-  const handleNoticeViewChange = (programNum: number) => {
+  // 곡설명 박스 초기 생성
+  const handleNoticeCreate = (programNum: number) => {
     const inputs = [...noticeInputs];
-    setNoticeInputs([...inputs, {programNumber:programNum, notice:'', view:true}]);
+    setNoticeInputs([...inputs, {programNumber : programNum, notice : [{songNum : inputs.length + 1, content: "", view: false}]}]);
   };
-  // 곡설명 입력창 삭제
-  const handleNoticeViewDelete = (programNum: number) => {
-    const inputs = [...noticeInputs];
-    const inputData = inputs.filter((e)=> e.programNumber !== programNum);
-    setNoticeInputs(inputData);
-  };
-  // 곡설명 내용 변경
-  const handleNoticeInputChange = (programNum: number, text: string) => {
+
+  // 곡설명 박스 추가
+  const handleNoticeAdd = (programNum: number, songIdx: number) => {
     const inputs = [...noticeInputs];
     const inputData = inputs.find((e)=> e.programNumber === programNum);
     if (inputData) {
-      inputData.notice = text;
+      inputData.notice[songIdx + 1] = {songNum : songIdx + 2, content: "", view: false};
+      setNoticeInputs(inputs);
+    }
+  };
+  // 곡설명 박스 삭제
+  const handleNoticeDelete = (programNum: number, songIdx: number) => {
+    const inputs = [...noticeInputs];
+    const inputData = inputs.find((e)=> e.programNumber === programNum);
+    if (inputData) {
+      inputData.notice.splice(songIdx, 1);
+      setNoticeInputs(inputs);
+    }
+  };
+
+  // 입력란 보이기
+  const handleNoticeViewChange = (programNum: number, songIdx: number) => {
+    const inputs = [...noticeInputs];
+    const inputData = inputs.find((e)=> e.programNumber === programNum);
+    const inputDataCopy = inputData?.notice.find((e)=> e.songNum === songIdx + 1);
+    if (inputDataCopy) {
+      inputDataCopy.view = true;
+    }
+    setNoticeInputs(inputs);
+  };
+  // 입력란 제거하기
+  const handleNoticeViewDelete = (programNum: number, songIdx: number) => {
+    const inputs = [...noticeInputs];
+    const inputData = inputs.find((e)=> e.programNumber === programNum);
+    const inputDataCopy = inputData?.notice.find((e)=> e.songNum === songIdx + 1);
+    if (inputDataCopy) {
+      inputDataCopy.view = false;
+    }
+    setNoticeInputs(inputs);
+  };
+
+  // 곡설명 내용 변경
+  const handleNoticeInputChange = (programNum: number, text: string, noticeIndex: number) => {
+    const inputs = [...noticeInputs];
+    const inputData = inputs.find((e)=> e.programNumber === programNum);
+    if (inputData) {
+      // inputData.notice[noticeIndex] = text;
       setNoticeInputs([...inputs]);
     }
   };
 
   // -----------------------------------------------------------------
   // 가사 입력 박스 
-  interface lyricsProps {
-    programNumber: number | null;
-    lyrics : string;
-    view : boolean;
+   interface LyricsProps {
+    programNumber: number;
+    lyrics : [{songNum : number, content: string, view: boolean}]
   }
 
-  // 곡설명 입력 데이터
-  const [lyricsInputs, setLyricsInputs] = useState<lyricsProps[]>([])
+  // 가사 입력 데이터
+  const [lyricsInputs, setLyricsInputs] = useState<LyricsProps[]>([])
 
-  // 곡설명 입력창 생성
-  const handleLyricsViewChange = (programNum: number) => {
+  // 가사 박스 초기 생성
+  const handleLyricsCreate = (programNum: number) => {
     const inputs = [...lyricsInputs];
-    setLyricsInputs([...inputs, {programNumber:programNum, lyrics:'', view:true}]);
+    setLyricsInputs([...inputs, {programNumber : programNum, lyrics : [{songNum : inputs.length + 1, content: "", view: false}]}]);
   };
-  // 곡설명 입력창 삭제
-  const handleLyricsViewDelete = (programNum: number) => {
-    const inputs = [...lyricsInputs];
-    const inputData = inputs.filter((e)=> e.programNumber !== programNum);
-    setLyricsInputs(inputData);
-  };
-  // 곡설명 내용 변경
-  const handleLyricsInputChange = (programNum: number, text: string) => {
+
+  // 곡설명 박스 추가
+  const handleLyricsAdd = (programNum: number, songIdx: number) => {
     const inputs = [...lyricsInputs];
     const inputData = inputs.find((e)=> e.programNumber === programNum);
     if (inputData) {
-      inputData.lyrics = text;
+      inputData.lyrics[songIdx + 1] = {songNum : songIdx + 2, content: "", view: false};
+      setLyricsInputs(inputs);
+    }
+  };
+  // 가사 박스 삭제
+  const handleLyricsDelete = (programNum: number, songIdx: number) => {
+    const inputs = [...lyricsInputs];
+    const inputData = inputs.find((e)=> e.programNumber === programNum);
+    if (inputData) {
+      inputData.lyrics.splice(songIdx, 1);
+      setLyricsInputs(inputs);
+    }
+  };
+
+  // 가사 보이기
+  const handleLyricsViewChange = (programNum: number, songIdx: number) => {
+    const inputs = [...lyricsInputs];
+    const inputData = inputs.find((e)=> e.programNumber === programNum);
+    const inputDataCopy = inputData?.lyrics.find((e)=> e.songNum === songIdx + 1);
+    if (inputDataCopy) {
+      inputDataCopy.view = true;
+    }
+    setLyricsInputs(inputs);
+  };
+  // 가사 제거하기
+  const handleLyricsViewDelete = (programNum: number, songIdx: number) => {
+    const inputs = [...lyricsInputs];
+    const inputData = inputs.find((e)=> e.programNumber === programNum);
+    const inputDataCopy = inputData?.lyrics.find((e)=> e.songNum === songIdx + 1);
+    if (inputDataCopy) {
+      inputDataCopy.view = false;
+    }
+    setLyricsInputs(inputs);
+  };
+
+  // 가사 내용 변경
+  const handleLyricsInputChange = (programNum: number, text: string, lyricsIndex: number) => {
+    const inputs = [...lyricsInputs];
+    const inputData = inputs.find((e)=> e.programNumber === programNum);
+    if (inputData) {
+      // inputData.lyrics[lyricsIndex] = text;
       setLyricsInputs([...inputs]);
     }
   };
@@ -399,20 +468,30 @@ export default function RegisterProgram (props:any) {
                   <ul className="registerProgram-StyleSelect">
                     <li className={`styleSelectBox ${item.styleSelected === 1 && 'selected'}`} onClick={()=>{
                       handleStyleSelectedChange(index, 1)
+                      handleNoticeCreate(item.number);
+                      handleLyricsCreate(item.number);
                     }}>A-Type 작곡가, 곡명</li>
                     <li className={`styleSelectBox ${item.styleSelected === 2 && 'selected'}`} onClick={()=>{
                       handleStyleSelectedChange(index, 2)
+                      handleNoticeCreate(item.number);
+                      handleLyricsCreate(item.number);
                     }}>B-Type 작곡가, 곡명1,2,3</li>
                     <li className={`styleSelectBox ${item.styleSelected === 3 && 'selected'}`} onClick={()=>{
                       handleStyleSelectedChange(index, 3);
                       handleSubProgramAdd(item.number);
+                      handleNoticeCreate(item.number);
+                      handleLyricsCreate(item.number);
                     }}>C-Type 작곡가, 소품제목, 곡명</li>
                     <li className={`styleSelectBox ${item.styleSelected === 4 && 'selected'}`} onClick={()=>{
                       handleStyleSelectedChange(index, 4)
+                      handleNoticeCreate(item.number);
+                      handleLyricsCreate(item.number);
                     }}>D-Type 작곡가1,2,3, 곡명</li>
                     <li className={`styleSelectBox ${item.styleSelected === 5 && 'selected'}`} onClick={()=>{
                       handleStyleSelectedChange(index, 5);
                       handleInterMissionInsert(index);
+                      handleNoticeCreate(item.number);
+                      handleLyricsCreate(item.number);
                     }}>E-Type InterMission</li>
                   </ul>
 
@@ -490,6 +569,10 @@ export default function RegisterProgram (props:any) {
                         {/* 곡명 ------------------------------------------------------------------------------- */}
                         {
                           item.songName.map((songs:any, songIndex:any)=>{
+
+                            const noticeDataCopy = noticeData?.notice.find((e)=> e.songNum === songIndex+1);
+                            const lyricsDataCopy = lyricsData?.lyrics.find((e)=> e.songNum === songIndex+1);
+
                             return(
                               <div key={songIndex}>
                                 <div className='inputbox'>
@@ -524,12 +607,29 @@ export default function RegisterProgram (props:any) {
                                     item.styleSelected === 2 &&
                                     <>
                                       { songIndex === item.songName.length - 1 ? (
+                                        <>
                                         <div className='song-plus-minus-button'
-                                          onClick={()=> addSongNameInput(item.number, songIndex)}
+                                          onClick={()=> {
+                                            addSongNameInput(item.number, songIndex);
+                                            handleNoticeAdd(item.number, songIndex);
+                                            handleLyricsAdd(item.number, songIndex);
+                                          }}
                                         ><p>+</p></div>
+                                        <div className='song-plus-minus-button'
+                                          onClick={() => {
+                                            removeSongNameInput(item.number, songIndex)
+                                            handleNoticeDelete(item.number, songIndex);
+                                            handleLyricsDelete(item.number, songIndex);
+                                          }}
+                                        ><p>-</p></div>
+                                        </>
                                       ) : (
                                         <div className='song-plus-minus-button'
-                                          onClick={() => removeSongNameInput(item.number, songIndex)}
+                                          onClick={() => {
+                                            removeSongNameInput(item.number, songIndex)
+                                            handleNoticeDelete(item.number, songIndex);
+                                            handleLyricsDelete(item.number, songIndex);
+                                          }}
                                         ><p>-</p></div>
                                       )}
                                     </>
@@ -537,7 +637,7 @@ export default function RegisterProgram (props:any) {
                                 </div>
                                 {/* 곡설명 ------------------------------------------------------------------------------- */}
                                 {
-                                  noticeData?.view === true
+                                  noticeDataCopy?.view
                                   ?
                                   <div className="register notice">
                                     <div className='inputbox'>
@@ -545,11 +645,11 @@ export default function RegisterProgram (props:any) {
                                         <PiArrowElbowDownRightThin/>
                                         <h4>곡설명</h4>
                                         <p className='notice-x'
-                                          onClick={()=>{handleNoticeViewDelete(item.number)}}
+                                          onClick={()=>{handleNoticeViewDelete(item.number, songIndex)}}
                                         >x</p>
                                       </div>
                                       <textarea
-                                        onChange={(e) => handleNoticeInputChange(item.number, e.target.value)}
+                                        onChange={(e) => handleNoticeInputChange(item.number, e.target.value, songIndex)}
                                       />
                                     </div>
                                   </div>
@@ -559,7 +659,7 @@ export default function RegisterProgram (props:any) {
                                       <div className='name'>
                                       </div>
                                       <div className='button'
-                                        onClick={()=>{handleNoticeViewChange(item.number)}}
+                                        onClick={()=>{handleNoticeViewChange(item.number, songIndex)}}
                                       >
                                         <h4>곡설명 입력하기</h4>
                                         <p>(선택)</p>
@@ -572,7 +672,7 @@ export default function RegisterProgram (props:any) {
                                   sort === 'Vocal' &&
                                   <>
                                   {
-                                    lyricsData?.view === true
+                                    lyricsDataCopy?.view
                                     ?
                                     <div className="register notice">
                                       <div className='inputbox'>
@@ -580,11 +680,11 @@ export default function RegisterProgram (props:any) {
                                           <PiArrowElbowDownRightThin/>
                                           <h4>가사</h4>
                                           <p className='notice-x'
-                                            onClick={()=>{handleLyricsViewDelete(item.number)}}
+                                            onClick={()=>{handleLyricsViewDelete(item.number, songIndex)}}
                                           >x</p>
                                         </div>
                                         <textarea
-                                          onChange={(e) => handleLyricsInputChange(item.number, e.target.value)}
+                                          onChange={(e) => handleLyricsInputChange(item.number, e.target.value, songIndex)}
                                         />
                                       </div>
                                     </div>
@@ -594,7 +694,7 @@ export default function RegisterProgram (props:any) {
                                         <div className='name'>
                                         </div>
                                         <div className='button'
-                                          onClick={()=>{handleLyricsViewChange(item.number)}}
+                                          onClick={()=>{handleLyricsViewChange(item.number, songIndex)}}
                                         >
                                           <h4>가사 입력하기</h4>
                                           <p>(선택)</p>

@@ -118,7 +118,7 @@ export default function Header () {
                 </h4>
                 <ul className="item__menubox">
                   <li className="item__menu" onClick={()=>{navigate('/apply'); setMainboxView(false)}}>신청하기</li>
-                  <li className="item__menu" onClick={()=>{navigate('/registerdefault'); setMainboxView(false)}}>등록하기</li>
+                  <li className="item__menu" onClick={()=>{navigate('/registertypeselect'); setMainboxView(false)}}>등록하기</li>
                 </ul>
               </li>
             </ul>

@@ -47,7 +47,7 @@ export default function RegisterPlayer (props:any) {
     setPlayers([...players, { part: '', name: '', imageFiles: [], careerInputs: ['', '', '', ''], careerText: "", isStyleWrite: false }]);
   };
 
-  // 연주자 박스 추가
+  // 연주자 박스 삭제
   const deletePlayerInput = () => {
     const inputs = [...players];
     inputs.splice(0, inputs.length - 1);
@@ -133,7 +133,7 @@ export default function RegisterPlayer (props:any) {
     } catch (error) {
       console.error('이미지 리사이징 중 오류 발생:', error);
     }
-  }, []);
+  }, [players]);
       
   // ---------------------------------------------------------------
   // 출연진 정보 등록

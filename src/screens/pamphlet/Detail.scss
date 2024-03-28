@@ -129,16 +129,16 @@
               display: flex;
 
               .program-notice-lyrics-btn {
-                width: 70px;
+                width: 30px;
                 height: 30px;
                 border: 1px solid #8C8C8C;
-                border-radius: 5px;
+                border-radius: 15px;
                 box-sizing: border-box;
                 margin-left: 10px;
-
                 @include middle;
+
                 p {
-                  font-size: 14px;
+                  font-size: 16px;
                 }
               }
               .program-notice-lyrics-btn:hover {
@@ -148,7 +148,7 @@
               .Contentbox {
                 position: absolute;
                 width: 500px;
-                top: 60px;
+                top: 57px;
                 right: 0;
                 background-color: #fff;
                 padding: 10px;

@@ -1,0 +1,155 @@
+@mixin middle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+};
+
+// ---------------------------------
+.apply {
+
+  .topimage {
+    width: 100%;  
+    height: 300px;
+    overflow: hidden;
+    @include middle;
+
+    img {
+      width: 100%;
+      
+    }
+  }
+
+  > .inner {
+    height: 100%;
+
+    .registerTypeSelectBox {
+      margin-top: 20px;
+      display: flex;
+      border: 1px solid #8C8C8C;
+      margin-bottom: 50px;
+      
+      .divider {
+        width: 1px;
+        background-color: #8C8C8C;;
+      }
+      .register {
+        @include middle;
+        position: relative;
+
+        .backBtn {
+          position: absolute;
+          left: 5px;
+          top: 5px;
+          width: 20px;
+          height: 20px;
+          border: 1px solid #8C8C8C;
+          border-radius: 5px;
+          @include middle;
+        }
+        .backBtn:hover {
+          cursor: pointer;
+          background-color: #BDBDBD;
+        }
+      }
+      .register.content {
+        width: 1100px;
+        flex-direction: column;
+        @include middle;
+
+
+        ul{
+          width: 90%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px;
+
+          li {
+            width: 19%;
+            height: 100px;
+            border: 1px solid #8C8C8C;
+            border-radius: 5px;
+            @include middle;
+          }
+          li:hover {
+            background-color: #EAEAEA;
+            cursor: pointer;
+          }
+        }
+
+        .inputbox {
+          width: 450px;
+          min-height: 50px;
+          margin-top: 15px;
+          position: relative;
+          display: flex;
+          align-items: center;
+          background-color: #EAEAEA;
+          justify-content: space-between;
+          border-radius: 5px;
+        
+          .name {
+            width: 130px;
+            @include middle;
+            flex-direction: column;
+          }
+          > .input
+          {
+            width: 420px;
+            height: 50px;
+            padding: 4px 10px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            border-radius: 5px;
+            color: #777;
+            font-size: 20px;
+            background-color: #fff;
+          }
+          > input::placeholder {
+            font-size: 14px;
+            color: #BDBDBD;
+          }
+        }
+      }
+      .register.name {
+        width: 200px;
+
+        p {font-size: 20px;}
+      }
+    }
+
+// buttonbox ----------------------------------------
+
+    .buttonbox {
+      width: 400px;
+      height: 30px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      
+
+      .button {
+        width: 150px;
+        height: 40px;
+        background-color: #EAEAEA;
+        border-radius: 10px;
+        margin-left: 20px;
+        margin-right: 20px;
+        @include middle;
+
+        p {
+          font-weight: 600;
+        }
+      }
+      .button:hover {
+        background-color: #8C8C8C;
+        cursor: pointer;
+      }
+    }
+
+  
+  }
+
+}
+

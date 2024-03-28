@@ -7,6 +7,8 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios'
 import MainURL from "../../MainURL";
 import Loading from '../../components/Loading';
+import { BsInfoLg } from "react-icons/bs";
+import { IoText } from "react-icons/io5";
 
 interface PostProps {
   id : number,
@@ -70,12 +72,12 @@ export default function Detail (props:any) {
       setProgramData(programData);
       const subProgramData = JSON.parse(copy.subProgram);
       setSubProgramData(subProgramData);
-      const noticeData = JSON.parse(copy.notice) || [];
+      const noticeData = copy.notice ? JSON.parse(copy.notice) : [];
       setNoticeData(noticeData);
       setIsNoticeView(Array(noticeData.length).fill(false));
-      const lyricsData = JSON.parse(copy.lyrics) || [];
+      const lyricsData = copy.lyrics ? JSON.parse(copy.lyrics) : [];
       setLyricsData(lyricsData);
-      
+      setIsNoticeView(Array(lyricsData.length).fill(false));
     }
     const profile = await axios.get(`${MainURL}/pamphlets/profiles/${location.state.id}`)
     if (profile.data) {
@@ -95,21 +97,25 @@ export default function Detail (props:any) {
   let [noticeData, setNoticeData] = useState<NoticeProps[]>([]);
   let [lyricsData, setLyricsData] = useState<LyricsProps[]>([]);
   let [profileData, setProfileData] = useState<ProfileProps[]>([]);
-  
 
   const posterImageURL = `${MainURL}/images/pamphlet_default/${postData?.imageName}`
   const [isNoticeView, setIsNoticeView] = useState<boolean[]>([]);
+  const [isLyricsView, setIsLyricsView] = useState<boolean[]>([]);
 
-  console.log(isNoticeView);
-
-  const noticeSelection = (index : any) => {
+  const noticeBtnSelection = (index : any, isBoolean: boolean) => {
     const selection = [...isNoticeView];
-    selection[index] = !selection[index];
+    selection[index] = isBoolean;
     setIsNoticeView(selection);
-    console.log(selection);
+  };
+
+  const lyricsBtnSelection = (index : any, isBoolean: boolean) => {
+    const selection = [...isLyricsView];
+    selection[index] = isBoolean;
+    setIsLyricsView(selection);
   };
   
-  return  postData === undefined || programData.length === 0 || profileData.length === 0
+  return  postData === undefined || programData.length === 0 
+  // postData === undefined || programData.length === 0 || profileData.length === 0
     ? (
     <div style={{flex:1, width:'100%', height:'80vh'}}>
       <Loading /> 
@@ -192,20 +198,39 @@ export default function Detail (props:any) {
                                     noticeCopy && 
                                     <>
                                       <div className="program-notice-lyrics-btn"
-                                        onClick={()=>{noticeSelection(index)}}
+                                        // onClick={()=>{noticeBtnSelection(index)}}
+                                        onMouseOver={()=>{noticeBtnSelection(index, true)}}
+                                        onMouseLeave={()=>{noticeBtnSelection(index, false)}}
                                       >
-                                        <p>곡설명</p>
+                                        <p><BsInfoLg /></p>
                                       </div>
                                       {
-                                        isNoticeView[index] && <div className="Contentbox">{noticeCopy.notice}</div>
+                                        isNoticeView[index] && 
+                                        <div className="Contentbox"
+                                          onMouseOver={()=>{noticeBtnSelection(index, true)}}
+                                          onMouseLeave={()=>{noticeBtnSelection(index, false)}}
+                                        >{noticeCopy.notice}</div>
                                       }
                                     </>
                                   }
                                   {
                                     lyricsCopy &&
-                                    <div className="program-notice-lyrics-btn">
-                                      <p>가사보기</p>
-                                    </div>
+                                    <>
+                                      <div className="program-notice-lyrics-btn"
+                                        // onClick={()=>{lyricsBtnSelection(index)}}
+                                        onMouseOver={()=>{lyricsBtnSelection(index, true)}}
+                                        onMouseLeave={()=>{lyricsBtnSelection(index, false)}}
+                                      >
+                                        <p><IoText /></p>
+                                      </div>
+                                      {
+                                        isLyricsView[index] && 
+                                        <div className="Contentbox"
+                                          onMouseOver={()=>{lyricsBtnSelection(index, true)}}
+                                          onMouseLeave={()=>{lyricsBtnSelection(index, false)}}
+                                        >{lyricsCopy.lyrics}</div>
+                                      }
+                                    </>
                                   }
                                 </div>
                               </div>
